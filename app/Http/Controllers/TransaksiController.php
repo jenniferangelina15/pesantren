@@ -106,7 +106,7 @@ class TransaksiController extends Controller
                             'jumlah_kostum' => ($transaksi->kostum->jumlah_kostum - 1),
                             ]);
 
-        alert()->success('Berhasil.','Data telah ditambahkan!');
+        alert()->success('Berhasil.','Data berhasil ditambahkan!');
         return redirect()->route('transaksi.index');
 
     }
@@ -170,7 +170,7 @@ class TransaksiController extends Controller
                             'jumlah_kostum' => ($transaksi->kostum->jumlah_kostum + 1),
                             ]);
 
-        alert()->success('Berhasil.','Data telah diubah!');
+        alert()->success('Berhasil.','Data berhasil diubah!');
         return redirect()->route('transaksi.index');
     }
 
@@ -183,7 +183,7 @@ class TransaksiController extends Controller
     public function destroy($id)
     {
         Transaksi::find($id)->delete();
-        alert()->success('Berhasil.','Data telah dihapus!');
+        alert()->success('Berhasil.','Data berhasil dihapus!');
         return redirect()->route('transaksi.index');
     }
 }
