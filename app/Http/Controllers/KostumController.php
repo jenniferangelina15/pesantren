@@ -83,7 +83,7 @@ class KostumController extends Controller
                 'gambar' => $gambar
             ]);
 
-        alert()->success('Berhasil.','Data telah ditambahkan!');
+        alert()->success('Berhasil.','Data berhasil ditambahkan!');
 
         return redirect()->route('kostum.index');
 
@@ -152,7 +152,7 @@ class KostumController extends Controller
                 'gambar' => $gambar
                 ]);
 
-        alert()->success('Berhasil.','Data telah diubah!');
+        alert()->success('Berhasil.','Data berhasil diubah!');
         return redirect()->route('kostum.index');
     }
 
@@ -165,7 +165,7 @@ class KostumController extends Controller
     public function destroy($id)
     {
         Kostum::find($id)->delete();
-        alert()->success('Berhasil.','Data telah dihapus!');
+        alert()->success('Berhasil.','Data berhasil dihapus!');
         return redirect()->route('kostum.index');
     }
 }
