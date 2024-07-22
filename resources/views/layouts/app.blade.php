@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>KOSTUMKU</title>
+  <title>Pesantren</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="<?php echo e(asset('vendors/iconfonts/mdi/css/materialdesignicons.min.css')); ?>">
   <link rel="stylesheet" href="<?php echo e(asset('vendors/css/vendor.bundle.base.css')); ?>">
@@ -22,17 +22,17 @@
 
   <?php echo $__env->yieldSection(); ?>
   <!-- endinject -->
-  <link rel="shortcut icon" href="<?php echo e(asset('logoKostumku.png')); ?>" />
+  <link rel="shortcut icon" href="<?php echo e(asset('logo.png')); ?>" />
 </head>
+
 <body>
-    <div class="container-scroller">
+  <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
-        <a class="navbar-brand brand-logo" href="index.html" style="color: #2d2d2d">
-          KOSTUMKU
-        </a>
-           <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center pt-3">
+        <img src="<?php echo e(asset('logo.png')); ?>" alt="">
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
           <span class="icon-menu"></span>
           <i class="fa fa-align-justify" style="color: #fff;"></i>
         </button>
@@ -40,47 +40,48 @@
 
       <div class="navbar-menu-wrapper d-flex align-items-center">
         <ul class="navbar-nav navbar-nav-right">
-         
+
           <li class="nav-item dropdown d-xl-inline-block">
             <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
               <span class="profile-text">Hello, <?php echo e(Auth::user()->name); ?> !</span>
-                <?php if(Auth::user()->gambar == ''): ?>
-                  <img class="img-xs rounded-circle"  src="<?php echo e(asset('images/user/default.png')); ?>" alt="profile image">
-                <?php else: ?>
-                <img class="img-xs rounded-circle"  src="<?php echo e(asset('images/user/'.Auth::user()->gambar)); ?>" alt="profile image">
-                <?php endif; ?>
+              <?php if (Auth::user()->gambar == ''): ?>
+              <img class="img-xs rounded-circle" src="<?php  echo e(asset('images/user/default.png')); ?>"
+                alt="profile image">
+              <?php else: ?>
+              <img class="img-xs rounded-circle" src="<?php  echo e(asset('images/user/' . Auth::user()->gambar)); ?>"
+                alt="profile image">
+              <?php endif; ?>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <a class="dropdown-item p-0">
                 <div class="d-flex border-bottom">
-                 
                 </div>
               </a>
-              <a class="dropdown-item" style="margin-top: 20px;" href="<?php echo e(route('user.edit', Auth::user()->id)); ?>">
-               Edit Profile
+              <a class="dropdown-item" style="margin-top: 20px;"
+                href="<?php echo e(route('user.edit', Auth::user()->id)); ?>">
+                Edit Profile
               </a>
               <a class="dropdown-item" href="<?php echo e(route('logout')); ?>" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                 Sign Out
+                Sign Out
+                <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
+                  <?php echo e(csrf_field()); ?>
 
-                                        <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
-                                            <?php echo e(csrf_field()); ?>
-
-                                        </form>
+                </form>
               </a>
             </div>
           </li>
         </ul>
-     
+
       </div>
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
-      <?php $__env->startSection('sidebar'); ?>
-          <?php echo $__env->make('layouts.sidebar',['user' => Auth::User()], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-      <?php echo $__env->yieldSection(); ?>
+        <?php $__env->startSection('sidebar'); ?>
+        <?php echo $__env->make('layouts.sidebar', ['user' => Auth::User()], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php echo $__env->yieldSection(); ?>
       </nav>
       <div class="main-panel">
         <div class="content-wrapper">
@@ -89,9 +90,10 @@
         </div>
         <footer class="footer">
           <div class="container-fluid clearfix">
-            <span class="text d-block text-center text-sm-left d-sm-inline-block" style="color: #5C57C7">Copyright © <?php echo e(date('Y')); ?>
+            <span class="text d-block text-center text-sm-left d-sm-inline-block" style="color: #2c892c">Copyright ©
+              <?php echo e(date('Y')); ?>
 
-            Jennifer Angelina. All rights reserved.</span>
+              Pesantren. All rights reserved.</span>
           </div>
         </footer>
         <!-- partial -->
@@ -116,5 +118,3 @@
 </body>
 
 </html>
-                         
-   

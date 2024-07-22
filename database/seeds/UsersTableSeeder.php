@@ -11,13 +11,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-       \App\User::insert([
+      \App\User::insert([
             [
               'id'  			=> 1,
-              'name'  			=> 'Gilacoding - Admin',
-              'username'		=> 'admin123',
-              'email' 			=> '123456@gilacoding.com',
-              'password'		=> bcrypt('admin123'),
+              'name'  			=> 'Kepala Pesantren',
+              'username'		=> 'kapes123',
+              'email' 			=> 'kapes123@pesantren.com',
+              'password'		=> bcrypt('kapes123'),
               'gambar'			=> NULL,
               'level'			=> 'admin',
               'remember_token'	=> NULL,
@@ -26,10 +26,10 @@ class UsersTableSeeder extends Seeder
             ],
             [
               'id'  			=> 2,
-              'name'  			=> 'Gilacoding - User',
-              'username'		=> 'user123',
-              'email' 			=> '654321@gilacoding.com',
-              'password'		=> bcrypt('user123'),
+              'name'  			=> 'Bendahara Pesantren',
+              'username'		=> 'bendahara1',
+              'email' 			=> 'bendahara1@pesantren.com',
+              'password'		=> bcrypt('bendahara1'),
               'gambar'			=> NULL,
               'level'			=> 'user',
               'remember_token'	=> NULL,

@@ -26,7 +26,6 @@ class UserController extends Controller
     public function index()
     {
         if(Auth::user()->level == 'user') {
-            Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
             return redirect()->to('/');
         }
 
@@ -34,11 +33,6 @@ class UserController extends Controller
         return view('auth.user', compact('datas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         if(Auth::user()->level == 'user') {
@@ -48,12 +42,6 @@ class UserController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $count = User::where('username',$request->input('username'))->count();
@@ -98,12 +86,6 @@ class UserController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         if((Auth::user()->level == 'user') && (Auth::user()->id != $id)) {
@@ -125,8 +107,8 @@ class UserController extends Controller
     public function edit($id)
     {   
         if((Auth::user()->level == 'user') && (Auth::user()->id != $id)) {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
-                return redirect()->to('/');
+            Alert::success('Berhasil', 'Data berhasil diupdate!');
+            return redirect()->route('user.edit', $id);
         }
 
         $data = User::findOrFail($id);
@@ -168,9 +150,8 @@ class UserController extends Controller
 
         $user_data->update();
 
-        Session::flash('message', 'Berhasil diubah!');
-        Session::flash('message_type', 'success');
-        return redirect()->to('user');
+        Alert::success('Berhasil', 'Data berhasil diupdate!');
+        return redirect()->route('user.edit', $id);
     }
 
     /**

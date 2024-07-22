@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Transaksi;
-use App\Customer;
-use App\Kostum;
+use App\Pembayaran;
+use App\Santri;
+use App\KasMasuk;
+use App\KasKeluar;
 use Auth;
 
 
@@ -28,19 +29,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $transaksi = Transaksi::get();
-        $customer   = Customer::get();
-        $kostum      = Kostum::get();
+        $pembayaran = Pembayaran::get();
+        $santri   = Santri::get();
+        $kasmasuk = KasMasuk::get();
+        $kaskeluar = KasKeluar::get();
+        // Menghitung total nominal dari kasmasuk
+        $totalKasMasuk = KasMasuk::sum('nominal');
+        // Menghitung total nominal dari kaskeluar
+        $totalKasKeluar = KasKeluar::sum('nominal');
 
-        $datas = Transaksi::where('status', 'sewa')->get();
-        // if(Auth::user()->level == 'user')
-        // {
-        //     $datas = Transaksi::where('status', 'sewa')
-        //                         ->where('anggota_id', Auth::user()->anggota->id)
-        //                         ->get();
-        // } else {
-        //     $datas = Transaksi::where('status', 'sewa')->get();
-        // }
-        return view('home', compact('transaksi', 'customer', 'kostum', 'datas'));
+        $datas = Pembayaran::where('status', 'belum setuju')->get();
+        return view('home', compact('pembayaran', 'santri', 'datas', 'kasmasuk', 'kaskeluar', 'totalKasMasuk', 'totalKasKeluar'));
+        return view('home');
     }
 }

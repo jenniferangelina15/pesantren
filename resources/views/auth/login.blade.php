@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>KOSTUMKU - LOGIN</title>
+  <title>Login</title>
 
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="{{asset('vendors/iconfonts/mdi/css/materialdesignicons.min.css')}}">
@@ -14,68 +14,87 @@
   <link rel="stylesheet" href="{{asset('vendors/css/vendor.bundle.addons.css')}}">
   <link rel="stylesheet" href="{{asset('css/style.css')}}">
   <!-- endinject -->
-  <link rel="shortcut icon" href="{{asset('logoKostumku.png')}}" />
+  <link rel="shortcut icon" href="{{asset('logo.png')}}" />
 </head>
 
 <body>
-<form method="POST" action="{{ route('login') }}">
-{{ csrf_field() }}
-  <div class="container-scroller">
-    <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
-      <div class="content-wrapper d-flex align-items-center auth theme-one">
-
-        <div class="row w-100">
-        <div class="col-md-12" style="margin-bottom: 20px;">
-        <h2 style="text-align: center;">KOSTUMKU</h2>
-        </div>
-        <div class="col-lg-4 mx-auto">
-            <div class="auto-form-wrapper">
-
-                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}"">
-                  <label class="label">Username</label>
-                  <div class="input-group">
-                    <input id="email" type="text" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-                    <div class="input-group-append">
-                      <span class="input-group-text">
-                        <i class="mdi mdi-check-circle-outline"></i>
-                      </span>
-                    </div>
-                  </div>
-                    @if ($errors->has('email'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                    @endif
-                </div>
-                <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                  <label class="label">Password</label>
-                  <div class="input-group">
-                    <input id="password" type="password" class="form-control" name="password" required>
-                    <div class="input-group-append">
-                      <span class="input-group-text">
-                        <i class="mdi mdi-check-circle-outline"></i>
-                      </span>
-                    </div>
-                    @if ($errors->has('password'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('password') }}</strong>
-                        </span>
-                    @endif
-                  </div>
-                </div>
-                <div class="form-group">
-                  <button class="btn btn-primary submit-btn btn-block" type="submit">Login</button>
-                </div>
+  <div class="d-flex" style="justify-content: space-between">
+    <!--Left-->
+    <div style="width: 45%; background-color: #2c892c;">
+      <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
+          <div class="content-wrapper d-flex align-items-center auth theme-one" style="background-color: #2c892c">
+            <div class="row w-100">
+              <div class="col-md-12 text-center" style="margin-bottom: 20px;">
+                <img src="{{asset('logo.png')}}" width="250px">
+              </div>
             </div>
-            <p class="footer-text text-center" style="margin-top: 20px;color: #5C57C7">Copyright © {{date('Y')}} Jennifer Angelina - All rights reserved.</p>
           </div>
+          <!-- content-wrapper ends -->
         </div>
+        <!-- page-body-wrapper ends -->
       </div>
-      <!-- content-wrapper ends Herziwp@gmail.com -->
     </div>
-    <!-- page-body-wrapper ends -->
+    <!--Right-->
+    <div style="width: 55%; background-color: #fff;">
+      <form method="POST" action="{{ route('login') }}">
+        {{ csrf_field() }}
+        <div class="container-scroller">
+          <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
+            <div class="content-wrapper d-flex align-items-center auth theme-one">
+              <div class="row w-100">
+                <div class="col-lg-6 mx-auto">
+                  <div class="auto-form-wrapper">
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                      <label class=" label">Username</label>
+                      <div class="input-group">
+                        <input id="email" type="text" class="form-control" name="email" value="{{ old('email') }}"
+                          required autofocus>
+                        <div class="input-group-append">
+                          <span class="input-group-text">
+                            <i class="mdi mdi-check-circle-outline"></i>
+                          </span>
+                        </div>
+                      </div>
+                      @if ($errors->has('email'))
+              <span class="help-block">
+              <strong>{{ $errors->first('email') }}</strong>
+              </span>
+            @endif
+                    </div>
+                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                      <label class="label">Password</label>
+                      <div class="input-group">
+                        <input id="password" type="password" class="form-control" name="password" required>
+                        <div class="input-group-append">
+                          <span class="input-group-text">
+                            <i class="mdi mdi-check-circle-outline"></i>
+                          </span>
+                        </div>
+                        @if ($errors->has('password'))
+              <span class="help-block">
+                <strong>{{ $errors->first('password') }}</strong>
+              </span>
+            @endif
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <button class="btn btn-primary submit-btn btn-block" type="submit">Login</button>
+                    </div>
+                  </div>
+                  <p class="footer-text text-center" style="margin-top: 20px;color: #2c892c">Copyright © {{date('Y')}}
+                    Jennifer Angelina - All rights reserved.</p>
+                </div>
+              </div>
+            </div>
+            <!-- content-wrapper ends -->
+          </div>
+          <!-- page-body-wrapper ends -->
+        </div>
+      </form>
+    </div>
   </div>
-  </form>
+
   <script src="{{asset('vendors/js/vendor.bundle.base.js')}}"></script>
   <script src="{{asset('vendors/js/vendor.bundle.addons.js')}}"></script>
 </body>

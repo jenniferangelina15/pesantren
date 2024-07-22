@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Kostum;
-use App\Customer;
-use App\Transaksi;
+use App\Santri;
+use App\KasMasuk;
+use App\KasKeluar;
+use App\Pembayaran;
 use Carbon\Carbon;
 use Session;
 use Illuminate\Support\Facades\Redirect;
@@ -29,123 +30,142 @@ class LaporanController extends Controller
         $this->middleware('auth');
     }
 
-    public function kostum()
+    public function pembayaran()
     {
-        return view('laporan.kostum');
-    }
-
-    public function kostumPdf()
-    {
-
-        $datas = Kostum::all();
-        $pdf = PDF::loadView('laporan.kostum_pdf', compact('datas'));
-        return $pdf->download('laporan_kostum_'.date('Y-m-d_H-i-s').'.pdf');
-    }
-
-public function transaksi()
-    {
-
-        return view('laporan.transaksi');
+        return view('laporan.pembayaran');
     }
 
 
-    public function transaksiPdf(Request $request)
-    {
-        $q = Transaksi::query();
+    public function showLaporanPembayaranForm()
+{
+    // Ambil data santri dari database
+    $santris = Santri::all(); // Ganti 'Santri' dengan nama model santri Anda
 
-        if($request->get('status')) 
-        {
-             if($request->get('status') == 'sewa') {
-                $q->where('status', 'sewa');
-            } else {
-                $q->where('status', 'kembali');
-            }
+    // Kirimkan data santri ke view
+    return view('laporan.pembayaran', compact('santris'));
+}
+
+public function pembayaranPdf(Request $request)
+{
+    $q = Pembayaran::query();
+
+    // Filter berdasarkan status
+    if ($request->has('status') && $request->status != '') {
+        if ($request->status == 'belum setuju') {
+            $q->where('status', 'belum setuju');
+        } else {
+            $q->where('status', 'setuju');
         }
-
-        // if(Auth::user()->level == 'user')
-        // {
-        //     $q->where('customer_id', Auth::user()->customer->id);
-        // }
-        
-        $datas = $q->get();
-
-       // return view('laporan.transaksi_pdf', compact('datas'));
-       $pdf = PDF::loadView('laporan.transaksi_pdf', compact('datas'));
-       return $pdf->download('laporan_transaksi_'.date('Y-m-d_H-i-s').'.pdf');
     }
 
+    // Filter berdasarkan santri_id
+    if ($request->has('santri_id') && $request->santri_id != '') {
+        $q->where('santri_id', $request->santri_id);
+    }
 
-// // public function transaksiExcel(Request $request)
-// //     {
-// //         $nama = 'laporan_transaksi_'.date('Y-m-d_H-i-s');
-// //         Excel::create($nama, function ($excel) use ($request) {
-// //         $excel->sheet('Laporan Data Transaksi', function ($sheet) use ($request) {
-        
-// //         $sheet->mergeCells('A1:H1');
+    // Filter berdasarkan kelas
+    if ($request->has('kelas') && $request->kelas != '') {
+        $q->where('kelas', $request->kelas);
+    }
 
-// //        // $sheet->setAllBorders('thin');
-// //         $sheet->row(1, function ($row) {
-// //             $row->setFontFamily('Calibri');
-// //             $row->setFontSize(11);
-// //             $row->setAlignment('center');
-// //             $row->setFontWeight('bold');
-// //         });
+    $datas = $q->get();
 
-// //         $sheet->row(1, array('LAPORAN DATA TRANSAKSI'));
+    $pdf = PDF::loadView('laporan.pembayaran_pdf', compact('datas'));
+    return $pdf->download('laporan_pembayaran_' . date('Y-m-d_H-i-s') . '.pdf');
+}
 
-// //         $sheet->row(2, function ($row) {
-// //             $row->setFontFamily('Calibri');
-// //             $row->setFontSize(11);
-// //             $row->setFontWeight('bold');
-// //         });
+public function showLaporanKasmasukForm()
+{
+    return view('laporan.kasmasuk'); // Ganti dengan nama view yang sesuai
+}
 
-// //         $q = Transaksi::query();
+public function kasMasukPdf(Request $request)
+{
+    $q = KasMasuk::query();
 
-// //         if($request->get('status')) 
-// //         {
-// //              if($request->get('status') == 'sewa') {
-// //                 $q->where('status', 'sewa');
-// //             } else {
-// //                 $q->where('status', 'kembali');
-// //             }
-// //         }
+    // Filter berdasarkan kategori
+    if($request->get('kategori')) 
+    {
+        $q->where('kategori', $request->get('kategori'));
+    }
 
-// //         if(Auth::user()->level == 'user')
-// //         {
-// //             $q->where('customer_id', Auth::user()->customer->id);
-// //         }
+    // Filter berdasarkan bulan
+    if($request->get('start_month')) 
+    {
+        $startMonth = $request->get('start_month');
+        $startDate = $startMonth . '-01'; // Tanggal pertama bulan
+        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
+        $q->whereBetween('tgl', [$startDate, $endDate]);
+    }
 
-// //         $datas = $q->get();
+    if($request->get('end_month')) 
+    {
+        $endMonth = $request->get('end_month');
+        $startDate = $endMonth . '-01'; // Tanggal pertama bulan
+        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
+        $q->whereBetween('tgl', [$startDate, $endDate]);
+    }
 
-// //        // $sheet->appendRow(array_keys($datas[0]));
-// //         $sheet->row($sheet->getHighestRow(), function ($row) {
-// //             $row->setFontWeight('bold');
-// //         });
+    $datas = $q->get();
+    $totalNominal = $datas->sum('nominal');
 
-// //          $datasheet = array();
-// //          $datasheet[0]  =   array("No", "Kode Transaksi", "Kostum", "Customer", "Tgl Sewa","Tgl Kembali", "Totla Harga", "Status");
-// //          $i=1;
+    $pdf = PDF::loadView('laporan.kasmasuk_pdf', [
+        'datas' => $datas,
+        'kategori' => $request->get('kategori'),
+        'startMonth' => $request->get('start_month'),
+        'endMonth' => $request->get('end_month'),
+        'totalNominal' => $totalNominal,
+        'totalData' => $datas->count()
+    ]);
 
-// //         foreach ($datas as $data) {
+    return $pdf->download('laporan_kas_masuk_' . date('Y-m-d_H-i-s') . '.pdf');
+}
 
-// //            // $sheet->appendrow($data);
-// //           $datasheet[$i] = array($i,
-// //                         $data['kode_transaksi'],
-// //                         $data->kostum->kostum,
-// //                         $data->customer->nama,
-// //                         date('d/m/y', strtotime($data['tgl_pinjam'])),
-// //                         date('d/m/y', strtotime($data['tgl_kembali'])),
-// //                         $data['total_harga'],
-// //                         $data['status']
-// //                     );
-          
-// //           $i++;
-// //         }
+public function showLaporanKaskeluarForm()
+{
+    return view('laporan.kaskeluar'); // Ganti dengan nama view yang sesuai
+}
 
-// //         $sheet->fromArray($datasheet);
-// //     });
+public function kasKeluarPdf(Request $request)
+{
+    $q = KasKeluar::query();
 
-// // })->export('xls');
+    // Filter berdasarkan kategori
+    if($request->get('kategori')) 
+    {
+        $q->where('kategori', $request->get('kategori'));
+    }
 
-// }
+    // Filter berdasarkan bulan
+    if($request->get('start_month')) 
+    {
+        $startMonth = $request->get('start_month');
+        $startDate = $startMonth . '-01'; // Tanggal pertama bulan
+        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
+        $q->whereBetween('tgl', [$startDate, $endDate]);
+    }
+
+    if($request->get('end_month')) 
+    {
+        $endMonth = $request->get('end_month');
+        $startDate = $endMonth . '-01'; // Tanggal pertama bulan
+        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
+        $q->whereBetween('tgl', [$startDate, $endDate]);
+    }
+
+    $datas = $q->get();
+    $totalNominal = $datas->sum('nominal');
+
+    $pdf = PDF::loadView('laporan.kaskeluar_pdf', [
+        'datas' => $datas,
+        'kategori' => $request->get('kategori'),
+        'startMonth' => $request->get('start_month'),
+        'endMonth' => $request->get('end_month'),
+        'totalNominal' => $totalNominal,
+        'totalData' => $datas->count()
+    ]);
+
+    return $pdf->download('laporan_kas_keluar_' . date('Y-m-d_H-i-s') . '.pdf');
+}
+
 }

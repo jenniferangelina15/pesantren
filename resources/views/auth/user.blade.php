@@ -31,7 +31,7 @@
                   
                   <div class="table-responsive">
                     <table id="table" class="table table-striped">
-                      <thead>
+                      <thead style="text-align: center">
                         <tr>
                           <th>
                             Name
@@ -50,18 +50,17 @@
                           </th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody style="text-align: center">
                       @foreach($datas as $data)
                         <tr>
-                          <td class="py-1">
+                          <td class="py-1" style="text-align: left">
                           @if($data->gambar)
                             <img src="{{url('images/user', $data->gambar)}}" alt="image" style="margin-right: 10px;" />
                           @else
                             <img src="{{url('images/user/default.png')}}" alt="image" style="margin-right: 10px;" />
 
                           @endif
-
-
+                          
                             {{$data->name}}
                           </td>
                           <td>
@@ -77,7 +76,7 @@
                           </td>
                           <td>
                            <div class="btn-group dropdown">
-                          <button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Action
                           </button>
                           <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 30px, 0px);">
