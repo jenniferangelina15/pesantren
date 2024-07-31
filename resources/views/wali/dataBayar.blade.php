@@ -3,142 +3,181 @@
         td {
             padding-top: 5px;
         }
+        .collapse-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .collapse-content.show {
+            max-height: 500px; /* Adjust based on content height */
+        }
     </style>
 </head>
 <?php $__env->startSection('js'); ?>
-
+<!-- Scripts -->
+<script src="{{ asset('vendors/js/vendor.bundle.base.js') }}"></script>
+<script src="{{ asset('vendors/js/vendor.bundle.addons.js') }}"></script>
+<script src="{{ asset('js/off-canvas.js') }}"></script>
+<script src="{{ asset('js/misc.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 <script type="text/javascript">
-
-$(document).ready(function() {
-    $(".users").select2();
-});
-
-</script>
-
-
-    <!-- Scripts -->
-    <script src="{{ asset('vendors/js/vendor.bundle.base.js') }}"></script>
-    <script src="{{ asset('vendors/js/vendor.bundle.addons.js') }}"></script>
-    <script src="{{ asset('js/off-canvas.js') }}"></script>
-    <script src="{{ asset('js/misc.js') }}"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
-        document.getElementById('kelasFilter').addEventListener('change', function() {
-            var selectedClass = this.value;
-            var rows = document.querySelectorAll('#table tbody tr');
-            rows.forEach(function(row) {
-                if (selectedClass === '' || row.dataset.kelas === selectedClass) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $(input).prev().attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $(function () {
-            $(".uploads").change(function() {
-                readURL(this);
-            });
-        });
-
-        $(document).ready(function () {
-            // Menyaring tabel berdasarkan pilihan kelas
-            $('#kelasFilter').on('change', function () {
-                var selectedClass = $(this).val();
-                
-                $('#table tbody tr').each(function () {
-                    var rowClass = $(this).data('kelas');
-                    
-                    if (selectedClass === "" || rowClass == selectedClass) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                });
-            });
-
-            // Menampilkan data pembayaran untuk kelas santri saat ini secara default
-            var defaultClass = "{{ $santri->kelas }}";
-            if (defaultClass) {
-                $('#kelasFilter').val(defaultClass).trigger('change');
-            }
-        });
-    </script>
-<script>
-$(document).ready(function() {
-    $('#detailModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var kodePembayaran = button.data('id'); // Extract info from data-* attributes
-        var modal = $(this);
-
-        // AJAX request to get payment details
-        $.ajax({
-            url: '/get-pembayaran-details', // Update with your route
-            type: 'GET',
-            data: { kode_pembayaran: kodePembayaran },
-            success: function(data) {
-                // Update modal with the data
-                modal.find('#kode_pembayaran').val(data.kode_pembayaran);
-                modal.find('#santri_nama').val(data.santri.nama);
-                modal.find('#santri_kelas').val(data.santri.kelas);
-                modal.find('select[name="bulan"]').val(data.bulan);
-                modal.find('input[name="status"]').val(data.status);
-                modal.find('input[name="nominal"]').val(data.nominal);
-                if(data.bukti) {
-                    modal.find('img').attr('src', '/images/pembayaran/' + data.bukti);
-                } else {
-                    modal.find('img').attr('src', '');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                // Optionally, show an alert or some error message
+    $(document).ready(function() {
+        $(".users").select2();
+    });
+    document.getElementById('kelasFilter').addEventListener('change', function() {
+        var selectedClass = this.value;
+        var rows = document.querySelectorAll('#table tbody tr');
+        rows.forEach(function(row) {
+            if (selectedClass === '' || row.dataset.kelas === selectedClass) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
             }
         });
     });
-});
 
-</script>
-
-<script type="text/javascript">
-        function readURL() {
-            var input = this;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $(input).prev().attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(input).prev().attr('src', e.target.result);
             }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(function () {
+        $(".uploads").change(function() {
+            readURL(this);
+        });
+    });
+
+    $(document).ready(function () {
+        // Menyaring tabel berdasarkan pilihan kelas
+        $('#kelasFilter').on('change', function () {
+            var selectedClass = $(this).val();
+            
+            $('#table tbody tr').each(function () {
+                var rowClass = $(this).data('kelas');
+                
+                if (selectedClass === "" || rowClass == selectedClass) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Menampilkan data pembayaran untuk kelas santri saat ini secara default
+        var defaultClass = "{{ $santri->kelas }}";
+        if (defaultClass) {
+            $('#kelasFilter').val(defaultClass).trigger('change');
+        }
+    });
+    $(document).ready(function() {
+        $('#detailModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var kodePembayaran = button.data('id'); // Extract info from data-* attributes
+            var modal = $(this);
+
+            // AJAX request to get payment details
+            $.ajax({
+                url: '/get-pembayaran-details', // Update with your route
+                type: 'GET',
+                data: { kode_pembayaran: kodePembayaran },
+                success: function(data) {
+                    // Update modal with the data
+                    modal.find('#kode_pembayaran').val(data.kode_pembayaran);
+                    modal.find('#santri_nama').val(data.santri.nama);
+                    modal.find('#santri_kelas').val(data.santri.kelas);
+                    modal.find('select[name="bulan"]').val(data.bulan);
+                    modal.find('input[name="status"]').val(data.status);
+                    modal.find('input[name="nominal"]').val(data.nominal);
+                    if(data.bukti) {
+                        modal.find('img').attr('src', '/images/pembayaran/' + data.bukti);
+                    } else {
+                        modal.find('img').attr('src', '');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    // Optionally, show an alert or some error message
+                }
+            });
+        });
+    });
+
+    function readURL() {
+        var input = this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(input).prev().attr('src', e.target.result);}
+            reader.readAsDataURL(input.files[0]);}
         }
 
         $(function () {
             $(".uploads").change(readURL)
             $("#f").submit(function(){
-                // do ajax submit or just classic form submit
-              //  alert("fake subminting")
-                return false
-            })
+            // do ajax submit or just classic form submit
+            //  alert("fake subminting")
+            return false
         })
-        </script>
+    })
+</script>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
     <!-- Alert Message -->
     @if ($santri->status === 'tagih')
-        <div class="alert alert-danger">
-            Tagihan bulan ini belum dibayar !
+    <div class="alert alert-danger mt-2 mb-2">
+        Tagihan bulan ini belum dibayar !
+    </div>
+    <button id="collapseButton" class="btn btn-primary">Lihat Cara Pembayaran</button>
+    <div id="collapseContent" class="collapse-content">
+        <div class="card ml-0 mr-0 col-7">
+            <div class="p-4" style="border-radius: 5px;">
+                <p>Berikut tata cara pembayaran SPP Pondok Pesantren Al Majidiyah:</p>
+                <p>1. Salin nomor rekening yang tertera</p>
+                <p>2. Lakukan pembayaran pada ATM/Brilink terdekat</p>
+                <p>3. Klik Tambah Pembayaran dan upload bukti pembayaran anda saat periode dibuka</p>
+                <p>4. Tunggu hasil pengecekan dari bendahara</p>
+                <p>5. Silahkan menghubungi ke nomor WA tertera apabila memiliki kendala</p>
+                <input type="text" id="rekToCopy" class="form-control" value="11223344" style="position: absolute; left: -9999px;">
+                <input type="text" id="WAToCopy" class="form-control" value="11223344" style="position: absolute; left: -9999px;">
+                <center>
+                    <button id="copyRekButton" class="btn col-4 btn-primary mb-2">Salin Nomor Rekening</button><br>
+                    <button id="copyWAButton" class="btn col-4 btn-primary">Salin Nomor WA</button>
+                </center>
+            </div>
         </div>
+    </div>
+    <script>
+        document.getElementById('collapseButton').addEventListener('click', function() {
+            var content = document.getElementById('collapseContent');
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+            } else {
+                content.classList.add('show');
+            }
+        });
+
+        document.getElementById('copyRekButton').addEventListener('click', function() {
+            var rekToCopy = document.getElementById('rekToCopy');
+            rekToCopy.select();
+            rekToCopy.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            alert('Nomor rekening telah disalin!');
+        });
+
+        document.getElementById('copyWAButton').addEventListener('click', function() {
+            var textToCopy = document.getElementById('WAToCopy');
+            WAToCopy.select();
+            WAToCopy.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            alert('Nomor rekening telah disalin!');
+        });
+    </script>
     @endif    
     <div class="row">
         <div class="col-md-12 d-flex align-items-stretch grid-margin">
@@ -277,6 +316,7 @@ $(document).ready(function() {
                                         <tr data-kelas="{{ $pembayaran->kelas }}">
                                             <td>{{ $pembayaran->kode_pembayaran }}</td>
                                             <td>{{ $pembayaran->bulan }}</td>
+                                            <td>{{ $pembayaran->kelas }}</td>
                                             <td>
                                                 @if($pembayaran->status == 'belum setuju')
                                                     <label class="badge badge-warning" style="font-size: 0.8rem;">Belum Setuju</label>
@@ -284,7 +324,6 @@ $(document).ready(function() {
                                                     <label class="badge badge-success" style="font-size: 0.8rem;">Setuju</label>
                                                 @endif
                                             </td>
-                                            <td>{{ $pembayaran->kelas }}</td>
                                             <td>
                                                 <!-- Contoh button di tabel -->
                                                 <button type="button" class="btn btn-primary detail-btn" data-toggle="modal" data-target="#detailModal" data-id="{{ $pembayaran->kode_pembayaran }}">

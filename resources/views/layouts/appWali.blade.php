@@ -56,6 +56,15 @@
         .navbar.default-layout .navbar-menu-wrapper {
             width: 100%;
         }
+        .nav-link.active {
+            background-color: #ffffff50;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .nav-link:hover {
+            color: black !important;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -64,38 +73,40 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="navbar-menu-wrapper d-flex align-items-center">
+                <ul class="navbar-nav navbar-nav-left">
+                    <img src="<?php echo e(asset('logo.png')); ?>" width="40px" class="ml-3 mr-3" alt="">
+                    <a class="nav-link pr-2 pl-2 mr-2 <?php echo e(Request::routeIs('wali.dataBayar') ? 'active' : ''); ?>" style="color: white" href="<?php echo e(route('wali.dataBayar')); ?>">
+                        <span class="menu-title">Data Bayar</span>
+                    </a>
+                    <a class="nav-link pr-2 pl-2 <?php echo e(Request::routeIs('wali.dataKas') ? 'active' : ''); ?>" style="color: white" href="<?php echo e(route('wali.dataKas')); ?>">
+                        <span class="menu-title">Data Kas</span>
+                    </a>
+                </ul>
                 <ul class="navbar-nav navbar-nav-right">
-                    <a class="nav-link pr-4" style="color: white" href="<?php echo e(route('wali.logout')); ?>">
+                    <a class="nav-link pr-4 <?php echo e(Request::routeIs('wali.logout') ? 'active' : ''); ?>" style="color: white" href="<?php echo e(route('wali.logout')); ?>">
                         <span class="menu-title">Logout</span>
                         <i class="menu-icon mdi mdi-logout"></i>
                     </a>
-                    <div class="d-flex border-bottom">
-                    </div>
-                    </a>
-                    </form>
-                    </a>
+                </ul>
             </div>
-            </li>
-            </ul>
-    </div>
-    </nav>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-        <div class="main-panel">
-            <div class="content-wrapper">
-                <?php echo $__env->yieldContent('content'); ?>
-            </div>
-            <footer class="footer">
-                <div class="container-fluid clearfix">
-                    <span class="text d-block text-center text-sm d-sm-inline-block" style="color: #2c892c">Copyright ©
-                        <?php echo e(date('Y')); ?>
-                        Pesantren. All rights reserved.</span>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <?php echo $__env->yieldContent('content'); ?>
                 </div>
-            </footer>
-            <!-- partial -->
+                <footer class="footer">
+                    <div class="container-fluid clearfix">
+                        <span class="text d-block text-center text-sm d-sm-inline-block" style="color: #2c892c">Copyright ©
+                            <?php echo e(date('Y')); ?>
+                            Pesantren. All rights reserved.</span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
         </div>
-        <!-- main-panel ends -->
-    </div>
     <!-- page-body-wrapper ends -->
     </div>
     <script src="<?php echo e(asset('vendors/js/vendor.bundle.base.js')); ?>"></script>

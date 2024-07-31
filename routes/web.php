@@ -4,6 +4,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index');
+Route::get('/homeNominalKeluar', 'HomeController@getNominalKeluarByCategory');
+Route::get('/homeNominalMasuk', 'HomeController@getNominalMasukByCategory');
+Route::get('/homeKasComparison', 'HomeController@getKasComparison');
+
+
 /*
 Route::get('/user', 'UserController@index');
 Route::get('/user-register', 'UserController@create');
@@ -26,6 +31,7 @@ Route::get('/santri/updateKelas/{id}', 'SantriController@updateKelas')->name('sa
 Route::resource('loginWali', 'WaliController');
 Route::post('/loginWali', 'WaliController@login')->name('wali.login');
 Route::get('/dataBayar', 'WaliController@dataBayar')->name('wali.dataBayar');
+Route::get('/dataKas', 'WaliController@dataKas')->name('wali.dataKas');
 Route::get('/bayar', 'WaliController@bayar')->name('wali.bayar');
 Route::get('/logout', 'WaliController@logout')->name('wali.logout');
 
@@ -47,8 +53,13 @@ Route::get('/laporan/pembayaran/pdf', 'LaporanController@pembayaranPdf')->name('
 Route::get('laporan/pembayaran', 'LaporanController@showLaporanPembayaranForm')->name('laporan.pembayaran.form');
 Route::get('laporan/kasmasuk/pdf', 'LaporanController@kasmasukPdf')->name('kasmasukPdf');
 Route::get('laporan/kasmasuk', 'LaporanController@showLaporanKasmasukForm')->name('laporan.kasmasuk.form');
-Route::get('laporan/kasmkeluar/pdf', 'LaporanController@kaskeluarPdf')->name('kaskeluarPdf');
+Route::get('laporan/kaskeluar/pdf', 'LaporanController@kaskeluarPdf')->name('kaskeluarPdf');
 Route::get('laporan/kaskeluar', 'LaporanController@showLaporanKaskeluarForm')->name('laporan.kaskeluar.form');
+Route::get('laporan/kas/pdf', 'LaporanController@kasPdf')->name('kasPdf');
+Route::get('laporan/kas', 'LaporanController@showLaporanKasForm')->name('laporan.kas.form');
+Route::get('laporan/download-kas-masuk/pdf', 'LaporanController@downloadKasMasuk')->name('downloadKasMasukPdf');
+Route::get('laporan/download-kas-keluar/pdf', 'LaporanController@downloadKasKeluar')->name('downloadKasKeluarPdf');
+
 
 
 

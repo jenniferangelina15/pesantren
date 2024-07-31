@@ -2,7 +2,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
     $('#table').DataTable({
-      "iDisplayLength": 50
+      "iDisplayLength": 20
     });
 
   });

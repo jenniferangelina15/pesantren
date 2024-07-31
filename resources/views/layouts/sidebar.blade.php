@@ -96,9 +96,10 @@
     <div class="collapse" id="ui-laporan">
       <ul class="nav flex-column sub-menu">
         <li class="nav-item">
-          <a class="nav-link" href="<?php  echo e(url('laporan/pembayaran')); ?>">Laporan Pembayaran</a>
-          <a class="nav-link" href="<?php  echo e(url('laporan/kasmasuk')); ?>">Laporan Kas Masuk</a>
-          <a class="nav-link" href="<?php  echo e(url('laporan/kaskeluar')); ?>">Laporan Kas Keluar</a>
+          <a class="nav-link" href="<?php  echo e(url('laporan/pembayaran')); ?>">Pembayaran</a>
+          <a class="nav-link" href="<?php  echo e(url('laporan/kasmasuk')); ?>">Kas Masuk</a>
+          <a class="nav-link" href="<?php  echo e(url('laporan/kaskeluar')); ?>">Kas Keluar</a>
+          <a class="nav-link" href="<?php  echo e(url('laporan/kas')); ?>">Kas Gabungan</a>
         </li>
     </div>
   </li>

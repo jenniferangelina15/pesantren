@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <label for="nominal" class="col-md-4 control-label">Nominal</label>
                             <div class="col-md-6">
-                                <input id="nominal" type="text" class="form-control" name="nominal" value="500.000" readonly>
+                                <input id="nominal" type="text" class="form-control" name="nominal" value="Rp. <?php  echo e(number_format($data->nominal), 2); ?>" readonly>
                             </div>
                         </div>
 

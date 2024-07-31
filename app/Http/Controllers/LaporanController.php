@@ -84,25 +84,28 @@ public function kasMasukPdf(Request $request)
     $q = KasMasuk::query();
 
     // Filter berdasarkan kategori
-    if($request->get('kategori')) 
-    {
+    if ($request->get('kategori')) {
         $q->where('kategori', $request->get('kategori'));
     }
 
     // Filter berdasarkan bulan
-    if($request->get('start_month')) 
-    {
+    if ($request->get('start_month') || $request->get('end_month')) {
         $startMonth = $request->get('start_month');
-        $startDate = $startMonth . '-01'; // Tanggal pertama bulan
-        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
-        $q->whereBetween('tgl', [$startDate, $endDate]);
-    }
-
-    if($request->get('end_month')) 
-    {
         $endMonth = $request->get('end_month');
-        $startDate = $endMonth . '-01'; // Tanggal pertama bulan
-        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
+
+        if ($startMonth) {
+            $startDate = $startMonth . '-01'; // Tanggal pertama bulan
+        } else {
+            $startDate = '1900-01-01'; // Tanggal awal yang sangat lama jika tidak ada start_month
+        }
+
+        if ($endMonth) {
+            $endDate = $endMonth . '-01'; // Tanggal pertama bulan akhir
+            $endDate = date('Y-m-t', strtotime($endDate)); // Tanggal terakhir bulan
+        } else {
+            $endDate = date('Y-m-d'); // Tanggal hari ini jika tidak ada end_month
+        }
+
         $q->whereBetween('tgl', [$startDate, $endDate]);
     }
 
@@ -121,35 +124,38 @@ public function kasMasukPdf(Request $request)
     return $pdf->download('laporan_kas_masuk_' . date('Y-m-d_H-i-s') . '.pdf');
 }
 
-public function showLaporanKaskeluarForm()
-{
-    return view('laporan.kaskeluar'); // Ganti dengan nama view yang sesuai
-}
+    public function showLaporanKaskeluarForm()
+    {
+        return view('laporan.kaskeluar'); // Ganti dengan nama view yang sesuai
+    }
 
-public function kasKeluarPdf(Request $request)
+    public function kasKeluarPdf(Request $request)
 {
     $q = KasKeluar::query();
 
     // Filter berdasarkan kategori
-    if($request->get('kategori')) 
-    {
+    if ($request->get('kategori')) {
         $q->where('kategori', $request->get('kategori'));
     }
 
     // Filter berdasarkan bulan
-    if($request->get('start_month')) 
-    {
+    if ($request->get('start_month') || $request->get('end_month')) {
         $startMonth = $request->get('start_month');
-        $startDate = $startMonth . '-01'; // Tanggal pertama bulan
-        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
-        $q->whereBetween('tgl', [$startDate, $endDate]);
-    }
-
-    if($request->get('end_month')) 
-    {
         $endMonth = $request->get('end_month');
-        $startDate = $endMonth . '-01'; // Tanggal pertama bulan
-        $endDate = date('Y-m-t', strtotime($startDate)); // Tanggal terakhir bulan
+
+        if ($startMonth) {
+            $startDate = $startMonth . '-01'; // Tanggal pertama bulan
+        } else {
+            $startDate = '1900-01-01'; // Tanggal awal yang sangat lama jika tidak ada start_month
+        }
+
+        if ($endMonth) {
+            $endDate = $endMonth . '-01'; // Tanggal pertama bulan akhir
+            $endDate = date('Y-m-t', strtotime($endDate)); // Tanggal terakhir bulan
+        } else {
+            $endDate = date('Y-m-d'); // Tanggal hari ini jika tidak ada end_month
+        }
+
         $q->whereBetween('tgl', [$startDate, $endDate]);
     }
 
@@ -168,4 +174,90 @@ public function kasKeluarPdf(Request $request)
     return $pdf->download('laporan_kas_keluar_' . date('Y-m-d_H-i-s') . '.pdf');
 }
 
+    public function showLaporanKasForm()
+    {
+    return view('laporan.kas'); // Ganti dengan nama view yang sesuai
+    }
+
+    public function kasPdf(Request $request)
+    {
+        $kasMasukQuery = KasMasuk::query();
+        $kasKeluarQuery = KasKeluar::query();
+    
+        // Filter kas masuk berdasarkan kategori
+        if ($request->get('kategori_masuk')) {
+            $kasMasukQuery->where('kategori', $request->get('kategori_masuk'));
+        }
+    
+        // Filter kas masuk berdasarkan bulan
+        if ($request->get('start_month_masuk') || $request->get('end_month_masuk')) {
+            $startMonthMasuk = $request->get('start_month_masuk');
+            $endMonthMasuk = $request->get('end_month_masuk');
+    
+            if ($startMonthMasuk) {
+                $startDateMasuk = $startMonthMasuk . '-01'; // Tanggal pertama bulan
+            } else {
+                $startDateMasuk = '1900-01-01'; // Tanggal awal yang sangat lama jika tidak ada start_month
+            }
+    
+            if ($endMonthMasuk) {
+                $endDateMasuk = $endMonthMasuk . '-01'; // Tanggal pertama bulan akhir
+                $endDateMasuk = date('Y-m-t', strtotime($endDateMasuk)); // Tanggal terakhir bulan
+            } else {
+                $endDateMasuk = date('Y-m-d'); // Tanggal hari ini jika tidak ada end_month
+            }
+    
+            $kasMasukQuery->whereBetween('tgl', [$startDateMasuk, $endDateMasuk]);
+        }
+    
+        // Filter kas keluar berdasarkan kategori
+        if ($request->get('kategori_keluar')) {
+            $kasKeluarQuery->where('kategori', $request->get('kategori_keluar'));
+        }
+    
+        // Filter kas keluar berdasarkan bulan
+        if ($request->get('start_month_keluar') || $request->get('end_month_keluar')) {
+            $startMonthKeluar = $request->get('start_month_keluar');
+            $endMonthKeluar = $request->get('end_month_keluar');
+    
+            if ($startMonthKeluar) {
+                $startDateKeluar = $startMonthKeluar . '-01'; // Tanggal pertama bulan
+            } else {
+                $startDateKeluar = '1900-01-01'; // Tanggal awal yang sangat lama jika tidak ada start_month
+            }
+    
+            if ($endMonthKeluar) {
+                $endDateKeluar = $endMonthKeluar . '-01'; // Tanggal pertama bulan akhir
+                $endDateKeluar = date('Y-m-t', strtotime($endDateKeluar)); // Tanggal terakhir bulan
+            } else {
+                $endDateKeluar = date('Y-m-d'); // Tanggal hari ini jika tidak ada end_month
+            }
+    
+            $kasKeluarQuery->whereBetween('tgl', [$startDateKeluar, $endDateKeluar]);
+        }
+    
+        $kasMasuk = $kasMasukQuery->get();
+        $kasKeluar = $kasKeluarQuery->get();
+    
+        $totalMasuk = $kasMasuk->sum('nominal');
+        $totalKeluar = $kasKeluar->sum('nominal');
+    
+        $pdf = PDF::loadView('laporan.kas_pdf', [
+            'kasMasuk' => $kasMasuk,
+            'kasKeluar' => $kasKeluar,
+            'kategoriMasuk' => $request->get('kategori_masuk'),
+            'startMonthMasuk' => $request->get('start_month_masuk'),
+            'endMonthMasuk' => $request->get('end_month_masuk'),
+            'kategoriKeluar' => $request->get('kategori_keluar'),
+            'startMonthKeluar' => $request->get('start_month_keluar'),
+            'endMonthKeluar' => $request->get('end_month_keluar'),
+            'totalMasuk' => $totalMasuk,
+            'totalKeluar' => $totalKeluar,
+            'totalDataMasuk' => $kasMasuk->count(),
+            'totalDataKeluar' => $kasKeluar->count()
+        ]);
+    
+        return $pdf->download('laporan_kas_' . date('Y-m-d_H-i-s') . '.pdf');
+    }
+    
 }

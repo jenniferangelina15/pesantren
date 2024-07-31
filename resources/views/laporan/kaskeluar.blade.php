@@ -23,8 +23,8 @@
             <div class="col-md-6">
               <select class="form-control" id="kategori" name="kategori">
                 <option value="">Semua</option>
-                <option value="sumbangan">Sumbangan</option>
-                <option value="pembayaran">Pembayaran</option>
+                <option value="makanan">Makanan</option>
+                <option value="operasional">Operasional</option>
                 <option value="lainnya">Lainnya</option>
               </select>
             </div>

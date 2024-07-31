@@ -2,7 +2,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
     $('#table').DataTable({
-      "iDisplayLength": 50
+      "iDisplayLength": 20
     });
   });
 </script>
@@ -73,7 +73,7 @@ foreach ($__currentLoopData as $data):
 
                 </td>
                 <td><?php  echo e($data->keterangan); ?></td>
-                <td><?php  echo e($data->nominal); ?></td>
+                <td>Rp. <?php  echo e(number_format($data->nominal), 2); ?></td>
                 <td>
                   <div class="btn-group dropdown">
                     <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown"

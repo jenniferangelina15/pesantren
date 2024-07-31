@@ -2,7 +2,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
     $('#table').DataTable({
-      "iDisplayLength": 50
+      "iDisplayLength": 20
     });
   });
 </script>
@@ -98,7 +98,7 @@ foreach ($__currentLoopData as $data):
                 <td><?php  echo e($data->santri->nama); ?></td>
                 <td><?php  echo e($data->kelas); ?></td>
                 <td><?php  echo e($data->bulan); ?></td>
-                <td><?php  echo e($data->nominal); ?></td>
+                <td>Rp. <?php  echo e(number_format($data->nominal), 2); ?></td>
                 <td style="text-align: center">
                   <?php  if ($data->status == 'belum setuju'): ?>
                   <label class="badge badge-warning" style="font-size: 0.8rem;">Belum Setuju</label>

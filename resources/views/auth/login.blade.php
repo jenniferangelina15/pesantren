@@ -83,7 +83,7 @@
                     </div>
                   </div>
                   <p class="footer-text text-center" style="margin-top: 20px;color: #2c892c">Copyright © {{date('Y')}}
-                    Jennifer Angelina - All rights reserved.</p>
+                    Pesantren - All rights reserved.</p>
                 </div>
               </div>
             </div>

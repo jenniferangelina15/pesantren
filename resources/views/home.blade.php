@@ -1,31 +1,24 @@
 <?php $__env->startSection('js'); ?>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
     $('#table').DataTable({
       "iDisplayLength": 50
     });
 
-    // Grafik Kas Masuk vs Kas Keluar
-    var ctxKas = document.getElementById('kasChart').getContext('2d');
+     // Grafik Kas Masuk vs Kas Keluar
+     var ctxKas = document.getElementById('kasChart').getContext('2d');
     var kasChart = new Chart(ctxKas, {
-      type: 'bar',
+      type: 'doughnut',
       data: {
         labels: ['Kas Masuk', 'Kas Keluar'],
         datasets: [{
           label: 'Nominal',
-          data: [<?php echo e($totalKasMasuk); ?>, <?php echo e($totalKasKeluar); ?>],
-          backgroundColor: ['rgba(44, 137, 44, 0.8)', 'rgba(44, 137, 44, 0.4)'],
+          data: [{{ $totalKasMasuk }}, {{ $totalKasKeluar }}],
+          backgroundColor: ['rgba(44, 137, 44, 0.7)', 'rgba(44, 137, 44, 0.4)'],
           borderColor: ['rgba(44, 137, 44, 1)', 'rgba(44, 137, 44, 1)'],
           borderWidth: 1
         }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
       }
     });
 
@@ -37,7 +30,7 @@
         labels: ['Setuju', 'Belum Setuju'],
         datasets: [{
           label: 'Jumlah',
-          data: [<?php echo e($pembayaran->where('status', 'setuju')->count()); ?>, <?php echo e($pembayaran->where('status', 'belum setuju')->count()); ?>],
+          data: [{{ $pembayaran->where('status', 'setuju')->count() }}, {{ $pembayaran->where('status', 'belum setuju')->count() }}],
           backgroundColor: ['rgba(44, 137, 44, 0.5)', 'rgba(44, 137, 44, 0.8)'],
           borderColor: ['rgba(44, 137, 44, 1)', 'rgba(44, 137, 44, 1)'],
           borderWidth: 1
@@ -54,9 +47,9 @@
         datasets: [{
           label: 'Jumlah',
           data: [
-            <?php echo e($santri->where('status', 'tagih')->count()); ?>,
-            <?php echo e($santri->where('status', 'cek')->count()); ?>,
-            <?php echo e($santri->where('status', 'lunas')->count()); ?>
+            {{ $santri->where('status', 'tagih')->count() }},
+            {{ $santri->where('status', 'cek')->count() }},
+            {{ $santri->where('status', 'lunas')->count() }}
           ],
           backgroundColor: ['rgba(44, 137, 44, 0.4)', 'rgba(44, 137, 44, 0.6)', 'rgba(44, 137, 44, 0.8)'],
           borderColor: ['rgba(44, 137, 44, 1)', 'rgba(44, 137, 44, 1)', 'rgba(44, 137, 44, 1)'],
@@ -66,26 +59,10 @@
     });
   });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
 
-<head>
-  <style>
-    #pembayaranChart {
-      width: 50% !important;
-      height: 50% !important;
-    }
-
-    #santriChart {
-      width: 50% !important;
-      height: 50% !important;
-    }
-  </style>
-</head>
 <div class="row">
   <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
     <div class="card card-statistics">
@@ -174,7 +151,6 @@
     </div>
   </div>
 </div>
-
 <div class="row">
   <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
     <div class="card card-statistics">
@@ -184,7 +160,37 @@
           <div class="card-body">
             <h4 class="card-title">Kas Masuk vs Kas Keluar</h4>
             <center>
-              <canvas id="kasChart" style="weight: 500px"></canvas>
+              <canvas id="kasComparisonChart" width="400" height="200"></canvas>
+              <script>
+                  // Mengambil data dari controller
+                  fetch('/homeKasComparison')
+                      .then(response => response.json())
+                      .then(data => {
+                          const ctx = document.getElementById('kasComparisonChart').getContext('2d');
+                          new Chart(ctx, {
+                              type: 'doughnut',
+                              data: {
+                                  labels: ['Kas Masuk', 'Kas Keluar'],
+                                  datasets: [{
+                                      label: 'Nominal',
+                                      data: [data.kasMasuk, data.kasKeluar],
+                                      backgroundColor: [
+                                        'rgba(44, 137, 44, 0.7)',
+                                        'rgba(44, 137, 44, 0.4)',
+                                        'rgba(44, 137, 44, 0.2)',
+                                      ],
+                                      borderColor: [
+                                        'rgba(44, 137, 44, 1)',
+                                        'rgba(44, 137, 44, 0.8)',
+                                        'rgba(44, 137, 44, 0.6)',
+                                      ],
+                                      borderWidth: 1
+                                  }]
+                              }
+                          });
+                      })
+                      .catch(error => console.error('Error fetching data:', error));
+              </script>
             </center>
           </div>
         </div>
@@ -193,28 +199,128 @@
   </div>
   <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
     <div class="card card-statistics">
-      <!-- Grafik Pembayaran -->
-      <div class="">
-        <div class="card card-statistics">
-          <div class="card-body">
-            <h4 class="card-title">Status Pembayaran</h4>
-            <center>
-              <canvas id="pembayaranChart"></canvas>
-            </center>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
-    <div class="card card-statistics">
-      <!-- Grafik Status Santri -->
+      <!-- Grafik Nominal Masuk by Kategori -->
       <div class="chart-container">
         <div class="card card-statistics">
           <div class="card-body">
-            <h4 class="card-title">Status Santri</h4>
+            <h4 class="card-title">Kas Masuk</h4>
             <center>
-              <canvas id="santriChart"></canvas>
+            <canvas id="nominalMasukChart" width="400" height="200"></canvas>
+          
+          <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+          <script>
+              // Mengambil data dari controller
+              fetch('/homeNominalMasuk')
+                  .then(response => response.json())
+                  .then(data => {
+                      const categories = data.map(item => item.kategori);
+                      const nominal = data.map(item => item.total_nominal);
+
+                      const ctx = document.getElementById('nominalMasukChart').getContext('2d');
+                      new Chart(ctx, {
+                          type: 'pie', 
+                          data: {
+                              labels: categories,
+                              datasets: [{
+                                  label: 'Nominal Berdasarkan Kategori',
+                                  data: nominal,
+                                  backgroundColor: [
+                                        'rgba(44, 137, 44, 0.7)',
+                                        'rgba(44, 137, 44, 0.4)',
+                                        'rgba(44, 137, 44, 0.2)',
+                                  ],
+                                  borderColor: [
+                                        'rgba(44, 137, 44, 1)',
+                                        'rgba(44, 137, 44, 0.8)',
+                                        'rgba(44, 137, 44, 0.6)',
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              responsive: true,
+                              plugins: {
+                                  legend: {
+                                      position: 'top',
+                                  },
+                                  tooltip: {
+                                      callbacks: {
+                                          label: function(tooltipItem) {
+                                              return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      });
+                  })
+                  .catch(error => console.error('Error fetching data:', error));
+          </script>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
+    <div class="card card-statistics">
+      <!-- Grafik Nominal Keluar by Category -->
+      <div class="">
+        <div class="card card-statistics">
+          <div class="card-body">
+            <h4 class="card-title">Kas Keluar</h4>
+            <center>
+              <canvas id="nominalKeluarChart" width="400" height="200"></canvas>
+          
+              <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+              <script>
+                  // Mengambil data dari controller
+                  fetch('/homeNominalKeluar')
+                      .then(response => response.json())
+                      .then(data => {
+                          const categories = data.map(item => item.kategori);
+                          const nominal = data.map(item => item.total_nominal);
+
+                          const ctx = document.getElementById('nominalKeluarChart').getContext('2d');
+                          new Chart(ctx, {
+                              type: 'doughnut', // Ubah tipe grafik menjadi 'pie'
+                              data: {
+                                  labels: categories,
+                                  datasets: [{
+                                      label: 'Nominal Berdasarkan Kategori',
+                                      data: nominal,
+                                      backgroundColor: [
+                                          'rgba(44, 137, 44, 0.7)',
+                                          'rgba(44, 137, 44, 0.4)',
+                                          'rgba(44, 137, 44, 0.2)',
+                                      ],
+                                      borderColor: [
+                                          'rgba(44, 137, 44, 1)',
+                                          'rgba(44, 137, 44, 0.8)',
+                                          'rgba(44, 137, 44, 0.6)',
+                                      ],
+                                      borderWidth: 1
+                                  }]
+                              },
+                              options: {
+                                  responsive: true,
+                                  plugins: {
+                                      legend: {
+                                          position: 'top',
+                                      },
+                                      tooltip: {
+                                          callbacks: {
+                                              label: function(tooltipItem) {
+                                                  return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                          });
+                      })
+                      .catch(error => console.error('Error fetching data:', error));
+              </script>
             </center>
           </div>
         </div>

@@ -60,7 +60,7 @@
                         <div class="form-group<?php echo e($errors->has('nominal') ? ' has-error' : ''); ?>">
                             <label for="nominal" class="col-md-4 control-label">Nominal</label>
                             <div class="col-md-6">
-                                <input id="nominal" type="text" class="form-control" name="nominal" value="<?php echo e($data->nominal); ?>" readonly>
+                                <input id="nominal" type="text" class="form-control" name="nominal" value="Rp. <?php  echo e(number_format($data->nominal), 2); ?>" readonly>
                                 <?php if($errors->has('nominal')): ?>
                                     <span class="help-block">
                                         <strong><?php echo e($errors->first('nominal')); ?></strong>

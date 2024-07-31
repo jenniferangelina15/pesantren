@@ -2,8 +2,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Santri;
 use App\Pembayaran;
+use App\Santri;
+use App\KasMasuk;
+use App\KasKeluar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Carbon\Carbon;
 use Session;
@@ -90,6 +92,33 @@ class WaliController extends Controller
             'kode' => $kode,
         ]);
     }
+
+    public function dataKas(Request $request)
+{
+    $pembayaran = Pembayaran::get();
+    $santri = Santri::get();
+    $totalKasMasuk = KasMasuk::sum('nominal');
+    $totalKasKeluar = KasKeluar::sum('nominal');
+
+    $startMonth = $request->input('start_month');
+    $endMonth = $request->input('end_month');
+
+    $query = KasKeluar::query();
+
+    if ($startMonth && $endMonth) {
+        $startDate = Carbon::createFromFormat('Y-m', $startMonth)->startOfMonth();
+        $endDate = Carbon::createFromFormat('Y-m', $endMonth)->endOfMonth();
+
+        $query->whereBetween('tgl', [$startDate, $endDate]);
+    }
+
+    $kaskeluar = $query->get();
+    $kasmasuk = KasMasuk::get();
+
+    return view('wali.dataKas', compact('pembayaran', 'santri', 'kasmasuk', 'kaskeluar', 'totalKasMasuk', 'totalKasKeluar', 'startMonth', 'endMonth'));
+}
+
+
 
     public function logout()
     {
