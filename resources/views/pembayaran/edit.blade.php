@@ -122,8 +122,8 @@
                                 <div class="col-md-6">
                                     <img width="200" height="200" <?php if ($data->bukti): ?>
                                         src="<?php    echo e(asset('images/pembayaran/' . $data->bukti)); ?>" <?php endif; ?> />
-                                    <input type="file" class="uploads form-control" style="margin-top: 20px;"
-                                        name="bukti">
+                                        <input type="file" class="uploads form-control" style="margin-top: 20px;" name="bukti" accept="image/jpeg, image/png, image/jpg">
+                                        <p class="text-gray" style="font-size: 12px; font-style: italic">Jenis file : jpg/jpeg/png | Ukuran maks : 3mb</p>
                                 </div>
                             </div>
 
@@ -198,3 +198,26 @@ $loop = $__env->getLastLoop(); ?>
 </div>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<script>
+document.querySelector('input[name="bukti"]').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+            alert('Tipe file tidak valid. Hanya jpeg, jpg, dan png yang diperbolehkan.');
+            event.target.value = ''; // Clear the input
+            return;
+        }
+        if (file.size > 3 * 1024 * 1024) { // 3MB in bytes
+            alert('Ukuran file maksimal adalah 3MB.');
+            event.target.value = ''; // Clear the input
+            return;
+        }
+
+        // Preview the image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('bukti-preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});

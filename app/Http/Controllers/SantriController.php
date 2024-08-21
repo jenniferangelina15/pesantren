@@ -28,7 +28,6 @@ class SantriController extends Controller
 
     public function index()
     {
-
         $datas = Santri::get();
         return view('santri.index', compact('datas'));
     }
@@ -102,7 +101,7 @@ class SantriController extends Controller
         ]);
 
         alert()->success('Berhasil.', 'Data telah ditambahkan!');
-        return redirect()->route('santri.index');
+        return redirect()->back();
     }
 
     public function show($id)
@@ -128,18 +127,10 @@ class SantriController extends Controller
 
     public function edit($id)
     {
-
         $data = Santri::findOrFail($id);
         return view('santri.edit', compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $santri_data = Santri::findOrFail($id);
@@ -202,13 +193,40 @@ class SantriController extends Controller
     // Metode untuk mengupdate seluruh status santri menjadi "tagih"
     public function updateStatus()
     {
-        // Update status semua santri yang kelasnya bukan "alumni" menjadi "tagih"
-        Santri::where('kelas', '!=', 'alumni')
-              ->update(['status' => 'tagih']);
+        // Ambil semua santri yang kelasnya bukan 'alumni'
+        $santris = Santri::where('kelas', '!=', 'alumni')->get();
 
+        foreach ($santris as $santri) {
+
+            $bulanIndonesia = [
+                1 => 'januari', 'februari', 'maret', 'april', 'mei', 'juni',
+                'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
+            ];
+            $bulanSaatIni = $bulanIndonesia[date('n')];
+            // Ambil data pembayaran terbaru untuk santri tersebut di kelas dan bulan saat ini
+            $pembayaran = Pembayaran::where('santri_id', $santri->id)
+                            ->where('kelas', $santri->kelas)
+                            ->where('bulan', $bulanSaatIni)
+                            ->latest()
+                            ->first();
+
+            // Tentukan status berdasarkan data pembayaran
+            if ($pembayaran) {
+                if ($pembayaran->status == 'belum setuju') {
+                    $santri->status = 'cek';
+                } elseif ($pembayaran->status == 'setuju') {
+                    $santri->status = 'lunas';
+                }
+            } else {
+                $santri->status = 'tagih';
+            }
+
+            // Simpan perubahan status
+            $santri->save();
+        }
 
         // Kirimkan notifikasi atau pesan sukses
-        return redirect()->route('santri.index')->with('success', 'Status seluruh santri berhasil diupdate menjadi "tagih".');
+        return redirect()->back()->with('success', 'Status seluruh santri berhasil diupdate.');
     }
 
 
@@ -219,9 +237,28 @@ class SantriController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        Santri::find($id)->delete();
-        alert()->success('Berhasil.', 'Data telah dihapus!');
-        return redirect()->route('santri.index');
+{
+    // Temukan santri berdasarkan ID
+    $santri = Santri::find($id);
+
+    // Periksa jika santri tidak ditemukan
+    if (!$santri) {
+        return redirect()->back()->with('error', 'Santri tidak ditemukan!');
     }
+
+    // Periksa jika ada pembayaran yang terkait dengan santri ini
+    $pembayaran = Pembayaran::where('santri_id', $id)->exists();
+
+    if ($pembayaran) {
+        // Jika ada data pembayaran yang terkait, tampilkan pesan error
+        alert()->error('Gagal.', 'Santri ini memiliki data pembayaran yang terkait!');
+        return redirect()->back();
+    }
+
+    // Jika tidak ada data pembayaran yang terkait, hapus santri
+    $santri->delete();
+    alert()->success('Berhasil.', 'Data telah dihapus!');
+    return redirect()->back();
+}
+
 }

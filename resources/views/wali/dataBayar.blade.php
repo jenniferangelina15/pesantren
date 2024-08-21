@@ -144,7 +144,7 @@
                 <p>4. Tunggu hasil pengecekan dari bendahara</p>
                 <p>5. Silahkan menghubungi ke nomor WA tertera apabila memiliki kendala</p>
                 <input type="text" id="rekToCopy" class="form-control" value="11223344" style="position: absolute; left: -9999px;">
-                <input type="text" id="WAToCopy" class="form-control" value="11223344" style="position: absolute; left: -9999px;">
+                <input type="text" id="WAToCopy" class="form-control" value="0761-112233" style="position: absolute; left: -9999px;">
                 <center>
                     <button id="copyRekButton" class="btn col-4 btn-primary mb-2">Salin Nomor Rekening</button><br>
                     <button id="copyWAButton" class="btn col-4 btn-primary">Salin Nomor WA</button>
@@ -175,7 +175,7 @@
             WAToCopy.select();
             WAToCopy.setSelectionRange(0, 99999); // For mobile devices
             document.execCommand('copy');
-            alert('Nomor rekening telah disalin!');
+            alert('Nomor WA telah disalin!');
         });
     </script>
     @endif    
@@ -278,12 +278,18 @@
                             <div class="mb-3">
                                 <h4>Pembayaran <b><?php echo e($santri->nama); ?></b></h4>
                             </div>
-                            
-                            @if ($santri->status == "tagih")
-                            <!-- Button to open the upload modal -->
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#uploadModal">
-                                Tambah Pembayaran
-                            </button>
+                            <?php
+                                // Hitung jumlah pembayaran santri di kelas saat ini
+                                $jumlahPembayaran = \App\Pembayaran::where('santri_id', $santri->id)
+                                                    ->where('kelas', $santri->kelas)
+                                                    ->count();
+                            ?>
+
+                            @if($jumlahPembayaran < 12)
+                                <!-- Button to open the upload modal -->
+                                <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#uploadModal">
+                                    Tambah Pembayaran
+                                </button>
                             @endif
                             <!-- Filter Kelas -->
                             <div class="row mb-3">
@@ -360,7 +366,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="POST" action="{{ route('pembayaran.storeWali') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('wali.storeWali') }}" enctype="multipart/form-data">
                 <?php echo e(csrf_field()); ?>
                     <div class="modal-body">
                         <input id="kode_pembayaran" type="text" class="form-control" name="kode_pembayaran" value="{{ $kode }}" hidden readonly>
@@ -387,8 +393,14 @@
                         <div class="form-group">
                             <label for="bukti" class="form-label">Bukti Pembayaran</label>
                             <br>
-                            <img width="200" height="200" class="mb-2" />
-                            <input type="file" class="uploads form-control" name="bukti">
+                            <img width="200" height="200" class="mb-2" id="bukti-preview" />
+                            <input type="file" class="uploads form-control" name="bukti" accept="image/jpeg, image/png, image/jpg" required>
+                            <p class="text-gray" style="font-size: 12px; font-style: italic">Jenis file : jpg/jpeg/png | Ukuran maks : 3mb</p>
+                            @if ($errors->has('bukti'))
+                                <div class="alert alert-danger mt-2">
+                                    {{ $errors->first('bukti') }}
+                                </div>
+                            @endif
                         </div>
                         <input type="hidden" name="status" value="belum setuju">
                         <input type="hidden" name="nominal" value="500000">
@@ -463,3 +475,27 @@
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.appWali', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
+<script>
+document.querySelector('input[name="bukti"]').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+            alert('Tipe file tidak valid. Hanya jpeg, jpg, dan png yang diperbolehkan.');
+            event.target.value = ''; // Clear the input
+            return;
+        }
+        if (file.size > 3 * 1024 * 1024) { // 3MB in bytes
+            alert('Ukuran file maksimal adalah 3MB.');
+            event.target.value = ''; // Clear the input
+            return;
+        }
+
+        // Preview the image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('bukti-preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>

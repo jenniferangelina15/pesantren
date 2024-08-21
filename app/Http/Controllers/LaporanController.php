@@ -37,13 +37,13 @@ class LaporanController extends Controller
 
 
     public function showLaporanPembayaranForm()
-{
-    // Ambil data santri dari database
-    $santris = Santri::all(); // Ganti 'Santri' dengan nama model santri Anda
+    {
+        // Ambil data santri dari database
+        $santris = Santri::all(); // Ganti 'Santri' dengan nama model santri Anda
 
-    // Kirimkan data santri ke view
-    return view('laporan.pembayaran', compact('santris'));
-}
+        // Kirimkan data santri ke view
+        return view('laporan.pembayaran', compact('santris'));
+    }
 
 public function pembayaranPdf(Request $request)
 {

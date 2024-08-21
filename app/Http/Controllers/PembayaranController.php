@@ -108,6 +108,7 @@ class PembayaranController extends Controller
         $this->validate($request, [
             'kode_pembayaran' => 'required|string|max:255',
             'santri_id' => 'required',
+            'bukti' => 'file|mimes:jpg,png,jpeg|max:3050', // Max 3MB
         ]);
 
         if ($request->file('bukti')) {
@@ -145,50 +146,9 @@ class PembayaranController extends Controller
             $santri->save();
         }
         alert()->success('Berhasil.', 'Data berhasil ditambahkan!');
-        return redirect()->route('pembayaran.index');
+        return redirect()->back();
     }
-
-
-    public function storeWali(Request $request)
-    {
-        \Log::info($request->all());
-        $this->validate($request, [
-            'kode_pembayaran' => 'required|string|max:255',
-            'santri_id' => 'required',
-        ]);
-
-        if ($request->file('bukti')) {
-            $file = $request->file('bukti');
-            $dt = Carbon::now();
-            $acak = $file->getClientOriginalExtension();
-            $fileName = rand(11111, 99999) . '-' . $dt->format('Y-m-d-H-i-s') . '.' . $acak;
-            $file->move("images/pembayaran", $fileName);
-            $bukti = $fileName;
-        } else {
-            $bukti = NULL;
-        }
-
-        $pembayaran = Pembayaran::create([
-            'kode_pembayaran' => $request->get('kode_pembayaran'),
-            'santri_id' => $request->get('santri_id'),
-            'bukti' => $bukti,
-            'bulan' => $request->get('bulan'),
-            'kelas' => $request->get('kelas'),
-            'nominal' => $request->get('nominal'),
-            'status' => $request->get('status'),
-        ]);
-
-        alert()->success('Berhasil.', 'Data berhasil ditambahkan!');
-        return redirect()->route('wali.dataBayar');
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show($id)
     {
         $data = Pembayaran::findOrFail($id);
@@ -204,26 +164,19 @@ class PembayaranController extends Controller
         return response()->json($pembayaran);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $data = Pembayaran::findOrFail($id);
 
-        // if((Auth::user()->level == 'user') && (Auth::user()->customer->id != $data->customer_id)) {
-        //         Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
-        //         return redirect()->to('/');
-        // }
         $santris = Santri::get();
         return view('pembayaran.edit', compact('santris', 'data'));
     }
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'bukti' => 'file|mimes:jpg,png,jpeg|max:3050', // Max 3MB
+        ]);
         // Ambil data pembayaran berdasarkan $id
         $pembayaran = Pembayaran::findOrFail($id);
 
@@ -271,7 +224,7 @@ class PembayaranController extends Controller
 
                 // Tampilkan pesan sukses dan redirect ke halaman indeks pembayaran
                 alert()->success('Berhasil.', 'Data berhasil diubah!');
-                return redirect()->route('pembayaran.indexBelum');
+                return redirect()->back();
             } elseif ($oldStatus === 'setuju' && $request->input('status') === 'belum setuju') {
                 // Jika status berubah dari "sudah" ke "belum"
                 $santri->update([
@@ -280,7 +233,7 @@ class PembayaranController extends Controller
 
                 // Tampilkan pesan sukses dan redirect ke halaman indeks pembayaran
                 alert()->success('Berhasil.', 'Data berhasil diubah!');
-                return redirect()->route('pembayaran.indexTelah');
+                return redirect()->back();
             }
         }
 
@@ -291,11 +244,11 @@ class PembayaranController extends Controller
             if ($oldStatus === 'belum setuju' && $request->input('status') === 'belum setuju') {
                 // Tampilkan pesan sukses dan redirect ke halaman indeks pembayaran
                 alert()->success('Berhasil.', 'Data berhasil diubah!');
-                return redirect()->route('pembayaran.indexBelum');
+                return redirect()->back();
             } elseif ($oldStatus === 'setuju' && $request->input('status') === 'setuju') {
                 // Tampilkan pesan sukses dan redirect ke halaman indeks pembayaran
                 alert()->success('Berhasil.', 'Data berhasil diubah!');
-                return redirect()->route('pembayaran.indexTelah');
+                return redirect()->back();
             }
         }
     }
@@ -317,7 +270,7 @@ class PembayaranController extends Controller
 
 
         alert()->success('Berhasil.', 'Data berhasil diubah!');
-        return redirect()->route('pembayaran.index');
+        return redirect()->back();
     }
 
     public function destroy($id)
@@ -336,7 +289,7 @@ class PembayaranController extends Controller
             // Trigger event
             event(new PembayaranDeleted($santriId, $kelas, $bulan));
             alert()->success('Berhasil.', 'Data berhasil dihapus!');
-            return redirect()->route('pembayaran.index');
+            return redirect()->back();
         }
     }
 

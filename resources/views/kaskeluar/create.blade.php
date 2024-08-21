@@ -9,8 +9,6 @@
 </script>
 <?php $__env->stopSection(); ?>
 
-
-
 <?php $__env->startSection('content'); ?>
 
 <form method="POST" action="<?php echo e(route('kaskeluar.store')); ?>" enctype="multipart/form-data">

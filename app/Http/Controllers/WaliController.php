@@ -118,6 +118,39 @@ class WaliController extends Controller
     return view('wali.dataKas', compact('pembayaran', 'santri', 'kasmasuk', 'kaskeluar', 'totalKasMasuk', 'totalKasKeluar', 'startMonth', 'endMonth'));
 }
 
+    public function storeWali(Request $request)
+    {
+        // Validasi input
+        $this->validate($request, [
+            'kode_pembayaran' => 'required|string|max:255',
+            'santri_id' => 'required',
+            'bukti' => 'file|mimes:jpg,png,jpeg|max:3050', // Max 3MB
+        ]);
+
+        if ($request->file('bukti')) {
+            $file = $request->file('bukti');
+            $dt = Carbon::now();
+            $acak = $file->getClientOriginalExtension();
+            $fileName = rand(11111, 99999) . '-' . $dt->format('Y-m-d-H-i-s') . '.' . $acak;
+            $file->move("images/pembayaran", $fileName);
+            $bukti = $fileName;
+        } else {
+            $bukti = NULL;
+        }
+
+        $pembayaran = Pembayaran::create([
+            'kode_pembayaran' => $request->get('kode_pembayaran'),
+            'santri_id' => $request->get('santri_id'),
+            'bukti' => $bukti,
+            'bulan' => $request->get('bulan'),
+            'kelas' => $request->get('kelas'),
+            'nominal' => $request->get('nominal'),
+            'status' => $request->get('status'),
+        ]);
+
+        alert()->success('Berhasil.', 'Data berhasil ditambahkan!');
+        return redirect()->route('wali.dataBayar');
+    }
 
 
     public function logout()

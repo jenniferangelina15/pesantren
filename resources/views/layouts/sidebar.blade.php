@@ -36,42 +36,105 @@
     <div class="collapse <?php  echo e(setShow(['santri*', 'pembayaran*', 'kasmasuk*', 'kaskeluar*', 'user*'])); ?>"
       id="ui-basic">
       <ul class="nav flex-column sub-menu">
+      <li class="nav-item">
+          <a class="nav-link <?php echo e(setActive(['santri*'])); ?>" style="padding-right: 35px" href="#" onclick="toggleSubmenu(event, 'santriSubmenu')">
+              Data Santri <i class="menu-arrow"></i>
+          </a>
+          <div id="santriSubmenu" class="submenu <?php echo e(request()->routeIs('santri.index10', 'santri.index11', 'santri.index12', 'santri.indexAlumni') ? 'visible' : ''); ?>">
+              <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['10*'])); ?>" href="<?php echo e(route('santri.index10')); ?>">Kelas 10</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['11*'])); ?>" href="<?php echo e(route('santri.index11')); ?>">Kelas 11</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['12*'])); ?>" href="<?php echo e(route('santri.index12')); ?>">Kelas 12</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['alumni*'])); ?>" href="<?php echo e(route('santri.indexAlumni')); ?>">Alumni</a>
+                  </li>
+              </ul>
+          </div>
+      </li>
+
+        <script>
+          function toggleSubmenu(event, submenuId) {
+              event.preventDefault();
+              var submenu = document.getElementById(submenuId);
+              submenu.classList.toggle('visible');
+              if (submenu.classList.contains('visible')) {
+                  submenu.style.maxHeight = submenu.scrollHeight + "px";
+              } else {
+                  submenu.style.maxHeight = null;
+              }
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+              var activeSubmenu = document.querySelector('.nav-item .submenu.visible');
+              if (activeSubmenu) {
+                  activeSubmenu.style.maxHeight = activeSubmenu.scrollHeight + "px";
+              }
+          });
+        </script>
+
+        <style>
+          .nav-item {
+              position: relative;
+          }
+
+          .nav-link {
+              cursor: pointer;
+          }
+
+          .submenu {
+              overflow: hidden;
+              transition: max-height 0.3s ease;
+              max-height: 0;
+          }
+
+          .submenu.visible {
+              max-height: 1000px; /* Maximum height, adjust if needed */
+          }
+        </style>
+
         <li class="nav-item">
-          <a class="nav-link <?php  echo e(setActive(['santri*'])); ?>"
-            href="<?php  echo e(route('santri.index')); ?>">Data Santri</a>
-          <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['10*'])); ?>"
-                href="<?php  echo e(route('santri.index10')); ?>">Kelas 10</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['11*'])); ?>"
-                href="<?php  echo e(route('santri.index11')); ?>">Kelas 11</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['12*'])); ?>"
-                href="<?php  echo e(route('santri.index12')); ?>">Kelas 12</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['alumni*'])); ?>"
-                href="<?php  echo e(route('santri.indexAlumni')); ?>">Alumni</a>
-            </li>
-          </ul>
+            <a class="nav-link <?php echo e(setActive(['pembayaran*'])); ?>" style="padding-right: 35px" href="#" onclick="toggleSubmenu(event, 'pembayaranSubmenu')">
+                Data Pembayaran <i class="menu-arrow"></i>
+            </a>
+            <div id="pembayaranSubmenu" class="submenu <?php echo e(request()->routeIs('pembayaran.indexBelum', 'pembayaran.indexTelah') ? 'visible' : ''); ?>">
+                <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo e(setActive(['belum*'])); ?>" href="<?php echo e(route('pembayaran.indexBelum')); ?>">Belum Setuju</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo e(setActive(['telah*'])); ?>" href="<?php echo e(route('pembayaran.indexTelah')); ?>">Telah Setuju</a>
+                    </li>
+                </ul>
+            </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link <?php  echo e(setActive(['pembayaran*'])); ?>"
-            href="<?php  echo e(route('pembayaran.index')); ?>">Data Pembayaran</a>
-          <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['belum*'])); ?>"
-                href="<?php  echo e(route('pembayaran.indexBelum')); ?>">Belum Setuju</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['telah*'])); ?>"
-                href="<?php  echo e(route('pembayaran.indexTelah')); ?>">Telah Setuju</a>
-            </li>
-          </ul>
-        </li>
+
+          <script>
+            function toggleSubmenu(event, submenuId) {
+                event.preventDefault();
+                var submenu = document.getElementById(submenuId);
+                submenu.classList.toggle('visible');
+                if (submenu.classList.contains('visible')) {
+                    submenu.style.maxHeight = submenu.scrollHeight + "px";
+                } else {
+                    submenu.style.maxHeight = null;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var activeSubmenu = document.querySelector('.nav-item .submenu.visible');
+                if (activeSubmenu) {
+                    activeSubmenu.style.maxHeight = activeSubmenu.scrollHeight + "px";
+                }
+            });
+
+          </script>
+
         <li class="nav-item">
           <a class="nav-link <?php  echo e(setActive(['kasmasuk*'])); ?>"
             href="<?php  echo e(route('kasmasuk.index')); ?>">Data Kas Masuk</a>
@@ -103,8 +166,8 @@
         </li>
     </div>
   </li>
-
   <?php endif; ?>
+
   <?php if (Auth::user()->level == 'user'): ?>
   <li class="nav-item <?php  echo e(setActive(['santri*', 'pembayaran*', 'kasmasuk*', 'kaskeluar*', 'user*'])); ?>">
     <a class="nav-link " data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
@@ -115,42 +178,105 @@
     <div class="collapse <?php  echo e(setShow(['santri*', 'pembayaran*', 'kasmasuk*', 'kaskeluar*', 'user*'])); ?>"
       id="ui-basic">
       <ul class="nav flex-column sub-menu">
+      <li class="nav-item">
+          <a class="nav-link <?php echo e(setActive(['santri*'])); ?>" style="padding-right: 35px" href="#" onclick="toggleSubmenu(event, 'santriSubmenu')">
+              Data Santri <i class="menu-arrow"></i>
+          </a>
+          <div id="santriSubmenu" class="submenu <?php echo e(request()->routeIs('santri.index10', 'santri.index11', 'santri.index12', 'santri.indexAlumni') ? 'visible' : ''); ?>">
+              <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['10*'])); ?>" href="<?php echo e(route('santri.index10')); ?>">Kelas 10</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['11*'])); ?>" href="<?php echo e(route('santri.index11')); ?>">Kelas 11</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['12*'])); ?>" href="<?php echo e(route('santri.index12')); ?>">Kelas 12</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link <?php echo e(setActive(['alumni*'])); ?>" href="<?php echo e(route('santri.indexAlumni')); ?>">Alumni</a>
+                  </li>
+              </ul>
+          </div>
+      </li>
+
+        <script>
+          function toggleSubmenu(event, submenuId) {
+              event.preventDefault();
+              var submenu = document.getElementById(submenuId);
+              submenu.classList.toggle('visible');
+              if (submenu.classList.contains('visible')) {
+                  submenu.style.maxHeight = submenu.scrollHeight + "px";
+              } else {
+                  submenu.style.maxHeight = null;
+              }
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+              var activeSubmenu = document.querySelector('.nav-item .submenu.visible');
+              if (activeSubmenu) {
+                  activeSubmenu.style.maxHeight = activeSubmenu.scrollHeight + "px";
+              }
+          });
+        </script>
+
+        <style>
+          .nav-item {
+              position: relative;
+          }
+
+          .nav-link {
+              cursor: pointer;
+          }
+
+          .submenu {
+              overflow: hidden;
+              transition: max-height 0.3s ease;
+              max-height: 0;
+          }
+
+          .submenu.visible {
+              max-height: 1000px; /* Maximum height, adjust if needed */
+          }
+        </style>
+
         <li class="nav-item">
-          <a class="nav-link <?php  echo e(setActive(['santri*'])); ?>"
-            href="<?php  echo e(route('santri.index')); ?>">Data Santri</a>
-          <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['10*'])); ?>"
-                href="<?php  echo e(route('santri.index10')); ?>">Kelas 10</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['11*'])); ?>"
-                href="<?php  echo e(route('santri.index11')); ?>">Kelas 11</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['12*'])); ?>"
-                href="<?php  echo e(route('santri.index12')); ?>">Kelas 12</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['alumni*'])); ?>"
-                href="<?php  echo e(route('santri.indexAlumni')); ?>">Alumni</a>
-            </li>
-          </ul>
+            <a class="nav-link <?php echo e(setActive(['pembayaran*'])); ?>" style="padding-right: 35px" href="#" onclick="toggleSubmenu(event, 'pembayaranSubmenu')">
+                Data Pembayaran <i class="menu-arrow"></i>
+            </a>
+            <div id="pembayaranSubmenu" class="submenu <?php echo e(request()->routeIs('pembayaran.indexBelum', 'pembayaran.indexTelah') ? 'visible' : ''); ?>">
+                <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo e(setActive(['belum*'])); ?>" href="<?php echo e(route('pembayaran.indexBelum')); ?>">Belum Setuju</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo e(setActive(['telah*'])); ?>" href="<?php echo e(route('pembayaran.indexTelah')); ?>">Telah Setuju</a>
+                    </li>
+                </ul>
+            </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link <?php  echo e(setActive(['pembayaran*'])); ?>"
-            href="<?php  echo e(route('pembayaran.index')); ?>">Data Pembayaran</a>
-          <ul class="nav flex-column sub-menu" style="padding-left: 2rem">
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['belum*'])); ?>"
-                href="<?php  echo e(route('pembayaran.indexBelum')); ?>">Belum Setuju</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <?php  echo e(setActive(['telah*'])); ?>"
-                href="<?php  echo e(route('pembayaran.indexTelah')); ?>">Telah Setuju</a>
-            </li>
-          </ul>
-        </li>
+
+          <script>
+            function toggleSubmenu(event, submenuId) {
+                event.preventDefault();
+                var submenu = document.getElementById(submenuId);
+                submenu.classList.toggle('visible');
+                if (submenu.classList.contains('visible')) {
+                    submenu.style.maxHeight = submenu.scrollHeight + "px";
+                } else {
+                    submenu.style.maxHeight = null;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var activeSubmenu = document.querySelector('.nav-item .submenu.visible');
+                if (activeSubmenu) {
+                    activeSubmenu.style.maxHeight = activeSubmenu.scrollHeight + "px";
+                }
+            });
+
+          </script>
+
         <li class="nav-item">
           <a class="nav-link <?php  echo e(setActive(['kasmasuk*'])); ?>"
             href="<?php  echo e(route('kasmasuk.index')); ?>">Data Kas Masuk</a>
@@ -160,5 +286,7 @@
             href="<?php  echo e(route('kaskeluar.index')); ?>">Data Kas Keluar</a>
         </li>
       </ul>
+    </div>
+  </li>
       <?php endif; ?>
 </ul>

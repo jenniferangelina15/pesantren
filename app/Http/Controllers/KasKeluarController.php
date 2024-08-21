@@ -56,7 +56,6 @@ class KasKeluarController extends Controller
      */
     public function create()
     {
-        
         return view('kaskeluar.create');
     }
 
@@ -68,11 +67,6 @@ class KasKeluarController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->validate($request, [
-            
-
-        // ]);
-
         $kaskeluar = KasKeluar::create([
                 'tgl' => $request->get('tgl'),
                 'kategori' => $request->get('kategori'),
@@ -82,27 +76,11 @@ class KasKeluarController extends Controller
 
         alert()->success('Berhasil.','Data berhasil ditambahkan!');
         return redirect()->route('kaskeluar.index');
-
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-
         $data = KasKeluar::findOrFail($id);
-
-
-        // if((Auth::user()->level == 'user') && (Auth::user()->customer->id != $data->customer_id)) {
-        //         Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
-        //         return redirect()->to('/');
-        // }
-
-
         return view('kaskeluar.show', compact('data'));
     }
 
@@ -115,22 +93,9 @@ class KasKeluarController extends Controller
     public function edit($id)
     {   
         $data = KasKeluar::findOrFail($id);
-
-        // if((Auth::user()->level == 'user') && (Auth::user()->customer->id != $data->customer_id)) {
-        //         Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
-        //         return redirect()->to('/');
-        // }
-
         return view('kaskeluar.edit', compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         KasKeluar::find($id)->update($request->all());
@@ -139,12 +104,6 @@ class KasKeluarController extends Controller
         return redirect()->route('kaskeluar.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         KasKeluar::find($id)->delete();

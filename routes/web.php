@@ -27,16 +27,15 @@ Route::get('/updateStatus', 'SantriController@updateStatus')->name('santri.updat
 // Tambahkan route untuk update kelas santri
 Route::get('/santri/updateKelas/{id}', 'SantriController@updateKelas')->name('santri.updateKelas');
 
-
 Route::resource('loginWali', 'WaliController');
 Route::post('/loginWali', 'WaliController@login')->name('wali.login');
 Route::get('/dataBayar', 'WaliController@dataBayar')->name('wali.dataBayar');
 Route::get('/dataKas', 'WaliController@dataKas')->name('wali.dataKas');
 Route::get('/bayar', 'WaliController@bayar')->name('wali.bayar');
 Route::get('/logout', 'WaliController@logout')->name('wali.logout');
+Route::post('/storeWali', 'WaliController@storeWali')->name('wali.storeWali');
 
 Route::resource('pembayaran', 'PembayaranController');
-Route::post('/storeWali', 'PembayaranController@storeWali')->name('pembayaran.storeWali');
 Route::get('/get-available-months', 'PembayaranController@getAvailableMonths');
 Route::get('/pembayaran-belum', 'PembayaranController@indexBelum')->name('pembayaran.indexBelum');
 Route::get('/pembayaran-telah', 'PembayaranController@indexTelah')->name('pembayaran.indexTelah');

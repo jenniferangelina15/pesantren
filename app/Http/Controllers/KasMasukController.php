@@ -49,14 +49,8 @@ class KasMasukController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        
         return view('kasmasuk.create');
     }
 
@@ -68,11 +62,6 @@ class KasMasukController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->validate($request, [
-            
-
-        // ]);
-
         $kasmasuk = KasMasuk::create([
                 'tgl' => $request->get('tgl'),
                 'kategori' => $request->get('kategori'),
